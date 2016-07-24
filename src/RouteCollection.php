@@ -101,9 +101,8 @@ class RouteCollection extends RouteCollector implements
      */
     public function group($prefix, callable $group)
     {
-        $group          = new RouteGroup($prefix, $group, $this);
-        $this->groups[] = $group;
-
+        $group = new RouteGroup($prefix, $group, $this);
+        $group();
         return $group;
     }
 
@@ -191,26 +190,11 @@ class RouteCollection extends RouteCollector implements
      */
     protected function buildNameIndex()
     {
-        $this->processGroups();
-
         foreach ($this->routes as $key => $route) {
             if (! is_null($route->getName())) {
                 unset($this->routes[$key]);
                 $this->namedRoutes[$route->getName()] = $route;
             }
-        }
-    }
-
-    /**
-     * Process all groups.
-     *
-     * @return void
-     */
-    protected function processGroups()
-    {
-        foreach ($this->groups as $key => $group) {
-            unset($this->groups[$key]);
-            $group();
         }
     }
 
