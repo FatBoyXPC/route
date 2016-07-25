@@ -2,10 +2,14 @@
 
 namespace League\Route;
 
+use League\Route\Strategy\StrategyInterface;
+use League\Route\Strategy\StrategyAwareTrait;
+
 class RouteGroup implements RouteCollectionInterface
 {
     use RouteCollectionMapTrait;
     use RouteConditionTrait;
+    use StrategyAwareTrait;
 
     /**
      * @var callable
@@ -21,6 +25,11 @@ class RouteGroup implements RouteCollectionInterface
      * @var string
      */
     protected $prefix;
+
+    /**
+     * @var StrategyInterface
+     */
+    protected $strategy;
 
     /**
      * Constructor.
@@ -62,6 +71,10 @@ class RouteGroup implements RouteCollectionInterface
 
         if ($scheme = $this->getScheme()) {
             $route->setScheme($scheme);
+        }
+
+        if ($strategy = $this->getStrategy()) {
+            $route->setStrategy($strategy);
         }
 
         return $route;
