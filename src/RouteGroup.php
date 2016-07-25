@@ -2,10 +2,14 @@
 
 namespace League\Route;
 
-class RouteGroup implements RouteCollectionInterface
+use League\Route\Namespaces\NamespacesAwareInterface;
+use League\Route\Namespaces\NamespacesAwareTrait;
+
+class RouteGroup implements RouteCollectionInterface, NamespacesAwareInterface
 {
     use RouteCollectionMapTrait;
     use RouteConditionTrait;
+    use NamespacesAwareTrait;
 
     /**
      * @var callable
@@ -62,6 +66,10 @@ class RouteGroup implements RouteCollectionInterface
 
         if ($scheme = $this->getScheme()) {
             $route->setScheme($scheme);
+        }
+
+        if ($namespace = $this->getNamespace()) {
+            $route->setNamespace($namespace);
         }
 
         return $route;

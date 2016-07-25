@@ -11,12 +11,15 @@ use League\Route\Strategy\StrategyAwareTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
+use League\Route\Namespaces\NamespacesAwareInterface;
+use League\Route\Namespaces\NamespacesAwareTrait;
 
-class Route implements ImmutableContainerAwareInterface, StrategyAwareInterface
+class Route implements ImmutableContainerAwareInterface, StrategyAwareInterface, NamespacesAwareInterface
 {
     use ImmutableContainerAwareTrait;
     use RouteConditionTrait;
     use StrategyAwareTrait;
+    use NamespacesAwareTrait;
 
     /**
      * @var string|callable
@@ -62,6 +65,7 @@ class Route implements ImmutableContainerAwareInterface, StrategyAwareInterface
         }
 
         if (is_array($callable) && isset($callable[0]) && is_string($callable[0])) {
+            $callable[0] = sprintf('%s\%s', $this->getNamespace(), $callable[0]);
             $class = ($this->getContainer()->has($callable[0]))
                    ? $this->getContainer()->get($callable[0])
                    : new $callable[0];

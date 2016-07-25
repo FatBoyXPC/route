@@ -15,11 +15,14 @@ use League\Route\Strategy\StrategyAwareInterface;
 use League\Route\Strategy\StrategyAwareTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use League\Route\Namespaces\NamespacesAwareInterface;
+use League\Route\Namespaces\NamespacesAwareTrait;
 
-class RouteCollection extends RouteCollector implements StrategyAwareInterface, RouteCollectionInterface
+class RouteCollection extends RouteCollector implements StrategyAwareInterface, RouteCollectionInterface, NamespacesAwareInterface
 {
     use RouteCollectionMapTrait;
     use StrategyAwareTrait;
+    use NamespacesAwareTrait;
 
     /**
      * @var \Interop\Container\ContainerInterface
@@ -82,6 +85,10 @@ class RouteCollection extends RouteCollector implements StrategyAwareInterface, 
         $route = (new Route)->setMethods((array) $method)->setPath($path)->setCallable($handler);
 
         $this->routes[] = $route;
+
+        if ($namespace = $this->getNamespace()) {
+            $route->setNamespace($namespace);
+        }
 
         return $route;
     }
