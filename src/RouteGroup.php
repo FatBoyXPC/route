@@ -2,10 +2,10 @@
 
 namespace League\Route;
 
-use League\Route\Strategy\StrategyInterface;
+use League\Route\Strategy\StrategyAwareInterface;
 use League\Route\Strategy\StrategyAwareTrait;
 
-class RouteGroup implements RouteCollectionInterface
+class RouteGroup implements RouteCollectionInterface, StrategyAwareInterface
 {
     use RouteCollectionMapTrait;
     use RouteConditionTrait;
