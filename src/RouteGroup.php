@@ -2,13 +2,16 @@
 
 namespace League\Route;
 
+use League\Route\Strategy\StrategyInterface;
+use League\Route\Strategy\StrategyAwareTrait;
 use League\Route\Namespaces\NamespacesAwareInterface;
 use League\Route\Namespaces\NamespacesAwareTrait;
 
-class RouteGroup implements RouteCollectionInterface, NamespacesAwareInterface
+class RouteGroup implements RouteCollectionInterface, StrategyAwareInterface, NamespacesAwareInterface
 {
     use RouteCollectionMapTrait;
     use RouteConditionTrait;
+    use StrategyAwareTrait;
     use NamespacesAwareTrait;
 
     /**
@@ -25,6 +28,11 @@ class RouteGroup implements RouteCollectionInterface, NamespacesAwareInterface
      * @var string
      */
     protected $prefix;
+
+    /**
+     * @var StrategyInterface
+     */
+    protected $strategy;
 
     /**
      * Constructor.
@@ -70,6 +78,9 @@ class RouteGroup implements RouteCollectionInterface, NamespacesAwareInterface
 
         if ($namespace = $this->getNamespace()) {
             $route->setNamespace($namespace);
+
+        if ($strategy = $this->getStrategy()) {
+            $route->setStrategy($strategy);
         }
 
         return $route;
