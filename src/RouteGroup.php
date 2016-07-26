@@ -2,7 +2,7 @@
 
 namespace League\Route;
 
-use League\Route\Strategy\StrategyInterface;
+use League\Route\Strategy\StrategyAwareInterface;
 use League\Route\Strategy\StrategyAwareTrait;
 use League\Route\Namespaces\NamespacesAwareInterface;
 use League\Route\Namespaces\NamespacesAwareTrait;
