@@ -78,6 +78,7 @@ class RouteGroup implements RouteCollectionInterface, StrategyAwareInterface, Na
 
         if ($namespace = $this->getNamespace()) {
             $route->setNamespace($namespace);
+        }
 
         if ($strategy = $this->getStrategy()) {
             $route->setStrategy($strategy);
