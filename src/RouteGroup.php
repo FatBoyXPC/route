@@ -37,15 +37,16 @@ class RouteGroup implements RouteCollectionInterface, StrategyAwareInterface, Na
     /**
      * Constructor.
      *
-     * @param string                        $prefix
+     * @param array                         $options
      * @param callable                      $callback
      * @param \League\Route\RouteCollection $collection
      */
-    public function __construct($prefix, callable $callback, RouteCollectionInterface $collection)
+    public function __construct(array $options, callable $callback, RouteCollectionInterface $collection)
     {
         $this->callback   = $callback;
         $this->collection = $collection;
-        $this->prefix     = sprintf('/%s', ltrim($prefix, '/'));
+
+        $this->setOptions($options);
     }
 
     /**
@@ -85,5 +86,44 @@ class RouteGroup implements RouteCollectionInterface, StrategyAwareInterface, Na
         }
 
         return $route;
+    }
+
+    public function group(array $options, callable $group)
+    {
+        $options['prefix'] = sprintf('%s/%s', $this->getPrefix(), ltrim($options['prefix'], '/'));
+        $options = array_merge($this->getOptions(), $options);
+
+        $this->collection->group($options, $group);
+    }
+
+    public function setOptions(array $options)
+    {
+        foreach ($options as $option => $value) {
+            $callable = sprintf('set%s', ucfirst(strtolower($option)));
+
+            if (is_callable([$this, $callable], false, $callableName)) {
+                $this->$callable($value);
+            }
+        }
+    }
+
+    public function getOptions()
+    {
+        return [
+            'host' => $this->getHost(),
+            'scheme' => $this->getScheme(),
+            'namespace' => $this->getNamespace(),
+            'strategy' => $this->getStrategy(),
+        ];
+    }
+
+    public function setPrefix($prefix)
+    {
+        $this->prefix = sprintf('/%s', ltrim($prefix, '/'));
+    }
+
+    public function getPrefix()
+    {
+        return (string) $this->prefix;
     }
 }

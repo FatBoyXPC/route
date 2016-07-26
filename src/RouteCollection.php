@@ -96,18 +96,17 @@ class RouteCollection extends RouteCollector implements StrategyAwareInterface, 
     /**
      * Add a group of routes to the collection.
      *
-     * @param string   $prefix
+     * @param array    $options
      * @param callable $group
      *
      * @return \League\Route\RouteGroup
      */
-    public function group($prefix, callable $group)
+    public function group(array $options, callable $group)
     {
-        $group = new RouteGroup($prefix, $group, $this);
+        $group = new RouteGroup($options, $group, $this);
+        $group();
 
-        $this->groups[] = $group;
-
-        return $group;
+        return $this;
     }
 
     /**
